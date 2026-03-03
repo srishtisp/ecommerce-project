@@ -1,13 +1,14 @@
 package com.product.controller;
 
-import com.product.dto.ProductDTO;
-import com.product.dto.ProductResponseDTO;
-import com.product.dto.ProductStatsDTO;
+import com.product.dto.*;
 import com.product.service.ProductService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.*;
 import java.util.List;
 
 @RestController
@@ -17,20 +18,11 @@ public class ProductController {
 
     private final ProductService service;
 
-    @PostMapping
-    public ProductResponseDTO addProduct(@Valid @RequestBody ProductDTO dto) {
-        return service.addProduct(dto);
-    }
-
-    @PutMapping("/{id}")
-    public ProductResponseDTO updateProduct(@PathVariable Long id,
-                                            @Valid @RequestBody ProductDTO dto) {
-        return service.updateProduct(id, dto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        service.deleteProduct(id);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ProductResponseDTO addProduct(
+            @RequestPart("product") ProductDTO dto,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        return service.addProduct(dto, file);
     }
 
     @GetMapping
@@ -38,27 +30,18 @@ public class ProductController {
         return service.getAllProducts();
     }
 
-    @GetMapping("/{id}")
-    public ProductResponseDTO getById(@PathVariable Long id) {
-        return service.getProductById(id);
-    }
+    @GetMapping("/image/{filename}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) throws Exception {
+        Path path = Paths.get("uploads").resolve(filename);
+        Resource resource = new UrlResource(path.toUri());
 
-    @GetMapping("/search")
-    public List<ProductResponseDTO> search(@RequestParam String name) {
-        return service.searchByName(name);
-    }
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
 
-    @GetMapping("/vendor/{vendorId}")
-    public List<ProductResponseDTO> byVendor(@PathVariable Long vendorId) {
-        return service.getProductsByVendor(vendorId);
-    }
-
-    @PatchMapping("/{id}/status")
-    public void toggleStatus(@PathVariable Long id, @RequestParam boolean active) {
-        service.toggleProductStatus(id, active);
-    }
-    @GetMapping("/vendor/{vendorId}/stats")
-    public ProductStatsDTO getStats(@PathVariable Long vendorId) {
-        return service.getProductStats(vendorId);
+        String contentType = Files.probeContentType(path);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
     }
 }
