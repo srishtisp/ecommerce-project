@@ -1,0 +1,63 @@
+﻿<h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
+
+<input placeholder="Name" [(ngModel)]="product.productName">
+<br>
+
+<input placeholder="Description" [(ngModel)]="product.description">
+<br>
+
+<input placeholder="Price" [(ngModel)]="product.price">
+<br>
+
+<input placeholder="Vendor Id" [(ngModel)]="product.vendorId">
+<br>
+
+<input type="file" (change)="onFileChange($event)">
+<br>
+
+<button *ngIf="!isEditMode" (click)="save()">Save</button>
+<button *ngIf="isEditMode" (click)="update()">Update</button>
+<button *ngIf="isEditMode" (click)="cancelEdit()">Cancel</button>
+
+<hr>
+
+<h2>Products</h2>
+
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>Name</th>
+  <th>Description</th>
+  <th>Price</th>
+  <th>Image</th>
+  <th>Edit</th>
+  <th>Change Image</th>
+  <th>Delete</th>
+</tr>
+
+<tr *ngFor="let p of products">
+  <td>{{p.productId}}</td>
+  <td>{{p.productName}}</td>
+  <td>{{p.description}}</td>
+  <td>{{p.price}}</td>
+  <td>
+    <img
+      width="80"
+      [src]="getImageUrl(p)">
+  </td>
+  <td>
+    <button (click)="startEdit(p)">Edit</button>
+  </td>
+  <td>
+    <input type="file" (change)="updateImage(p.productId,$event)">
+  </td>
+  <td>
+    <button (click)="delete(p.productId)">Delete</button>
+  </td>
+</tr>
+
+</table>
+
+
+
+

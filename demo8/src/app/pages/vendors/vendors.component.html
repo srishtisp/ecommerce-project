@@ -1,0 +1,26 @@
+<h2>Vendors</h2>
+
+<label>
+  <input type="checkbox" [(ngModel)]="showOnlyActive">
+  Show only active vendors
+</label>
+
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>Name</th>
+  <th>Category</th>
+  <th>Status</th>
+  <th>Dashboard</th>
+</tr>
+
+<tr *ngFor="let v of filteredVendors">
+  <td>{{v.vendorId}}</td>
+  <td>{{v.vendorName}}</td>
+  <td>{{v.category}}</td>
+  <td>{{ v.active ? 'Active' : 'Inactive' }}</td>
+  <td>
+    <a [routerLink]="['/dashboard',v.vendorId]">View</a>
+  </td>
+</tr>
+</table>
