@@ -16,13 +16,14 @@ public class Product {
     @Column(nullable = false)
     private String productName;
 
-    @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
     private double price;
 
-    private Long vendorId;   // from Vendor Service
+    private Long vendorId;
 
-    private boolean active = true;   // admin approval
+    private boolean active = true;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }

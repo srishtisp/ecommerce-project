@@ -1,10 +1,10 @@
 package com.product.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@Builder
+@AllArgsConstructor
 public class ProductResponseDTO {
     private Long productId;
     private String productName;
@@ -12,4 +12,5 @@ public class ProductResponseDTO {
     private double price;
     private Long vendorId;
     private boolean active;
+    private String imageUrl;
 }

@@ -1,14 +1,12 @@
 package com.product.service;
 
-import com.product.dto.ProductDTO;
-import com.product.dto.ProductResponseDTO;
-import com.product.dto.ProductStatsDTO;
-
+import com.product.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ProductService {
 
-    ProductResponseDTO addProduct(ProductDTO dto);
+    ProductResponseDTO addProduct(ProductDTO dto, MultipartFile file);
 
     ProductResponseDTO updateProduct(Long id, ProductDTO dto);
 
@@ -23,5 +21,6 @@ public interface ProductService {
     List<ProductResponseDTO> getProductsByVendor(Long vendorId);
 
     void toggleProductStatus(Long id, boolean active);
+
     ProductStatsDTO getProductStats(Long vendorId);
 }
